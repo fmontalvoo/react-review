@@ -1,32 +1,43 @@
 import React, { useState } from 'react';
 
 const Forms = (props) => {
-    const [value, setState] = useState({ input: '', select: '2' });
+    const [formState, setState] = useState({ input: '', select: '2', isGoing: false });
 
-    const onChange = (evt) => setState({ ...value, input: evt.target.value });
+    const onChange = (evt) => {
+        const target = evt.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
 
-    const onSelect = (evt) => setState({ ...value, select: evt.target.value });
+        setState(prevFormState => ({ ...prevFormState, [name]: value }));
+    }
 
     const onSubmit = (evt) => {
         evt.preventDefault();
-        console.log(value);
-        alert(`INPUT: ${value.input} SELECT: ${value.select}`);
+        console.log(formState);
+        alert(`INPUT: ${formState.input} SELECT: ${formState.select}, ISGOING: ${formState.isGoing}`);
     }
 
     return (
         <form onSubmit={onSubmit}>
             Input:
-            <input type="text" value={value.input} onChange={onChange} />
+            <input name="input" type="text" value={formState.input} onChange={onChange} />
             <br />
             Select:
-            <select value={value.select} onChange={onSelect}>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+            <select name="select" value={formState.select} onChange={onChange}>
+                <option value="1">Uno</option>
+                <option value="2">Dos</option>
+                <option value="3">Tres</option>
             </select>
             <br />
+            Is going:
+            <input
+                name="isGoing"
+                type="checkbox"
+                checked={formState.isGoing}
+                onChange={onChange} />
+            <br />
             <button type="submit">Enviar</button>
-        </form>
+        </form >
     );
 }
 
